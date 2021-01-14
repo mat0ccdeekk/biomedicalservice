@@ -1,11 +1,11 @@
 from django.db import models
+import uuid
+
 # Create your models here.
 
-# class FornitorePlus(models.Model):
-#     fornitoreplus = models.OneToOneField(Fornitore, on_delete=models.CASCADE, verbose_name="Fornitore")
 class Cliente(models.Model):
-
     #dati obbligatori
+    codiceID = models.CharField(max_length=100, verbose_name="Codice")
     denominazione = models.CharField(blank=True, max_length=150)
     citta = models.CharField(blank=True, max_length=100, verbose_name="città")
     provincia = models.CharField(blank=True, max_length=10)
@@ -18,7 +18,7 @@ class Cliente(models.Model):
     #referente
     nome= models.CharField(blank=True, max_length=100)
     cognome = models.CharField(blank=True, max_length=100)
-    creato = models.DateTimeField(auto_now_add=True, verbose_name="Data creazione")
+    creato = models.DateField(auto_now_add=True, verbose_name="Data creazione")
 
     def __str__(self):
         return self.denominazione
@@ -41,7 +41,7 @@ class Fornitore(models.Model):
     #referente
     nome= models.CharField(blank=True, max_length=100)
     cognome = models.CharField(blank=True, max_length=100)
-    creato = models.DateTimeField(auto_now_add=True, verbose_name="Data creazione")
+    creato = models.DateField(auto_now_add=True, verbose_name="Data creazione")
 
     def __str__(self):
         return self.denominazione
@@ -51,33 +51,48 @@ class Fornitore(models.Model):
         verbose_name_plural = "fornitori"
 
 
-
-
 class Acquisti(models.Model):
+    codiceID = models.CharField(max_length=100, verbose_name="Codice")
     fornitore= models.ForeignKey(Fornitore, on_delete=models.CASCADE)
-    codiceProdotto = models.CharField(max_length=100, verbose_name="Codice prodotto") #aggiungere in caso primary_key=True
-    descrizione = models.CharField(blank=True, max_length=200)
     DDT = models.FileField(upload_to="DDT_Acquisti/%Y/%m/%d")
     fattura = models.FileField(upload_to="Fattura_Acquisti/%Y/%m/%d")
+    # prezzo = models.IntegerField(default='0')
     creato = models.DateField(verbose_name="Data acquisto")
-    prezzo = models.IntegerField(default='0')
+    pagamento = models.BooleanField(default=False, verbose_name="Pagato")
+
+    def __str__(self):
+        return str(self.id)
+
+    class Meta:
+        verbose_name = "Acquisto"
+        verbose_name_plural = "Acquisti"
+
+#Prodotto nascosto
+class Prodotti(models.Model):
+    acquisto= models.ForeignKey(Acquisti, on_delete=models.CASCADE, related_name="prodotti_acquistati")
+    codiceProdotto = models.CharField(max_length=100, verbose_name="Codice prodotto") #aggiungere in caso primary_key=True
+    descrizione = models.CharField(blank=True, max_length=200)
     quantita = models.IntegerField(blank=True, default="1", verbose_name="quantità")
+    prezzo = models.IntegerField(default='0')
+    iva = models.IntegerField(default='22')
+
 
     def __str__(self):
         return self.codiceProdotto
 
     class Meta:
-        verbose_name = "Acquisto"
-        verbose_name_plural = "Acquisti"
+        verbose_name = "Prodotto"
+        verbose_name_plural = "Prodotti"
 
 #Magazzino
 class Dispositivo(models.Model):
     fornitore= models.ForeignKey(Fornitore, on_delete=models.CASCADE)
     codiceProdotto = models.CharField(max_length=100, verbose_name="Codice prodotto") #aggiungere in caso primary_key=True
     descrizione = models.CharField(blank=True, max_length=200)
-    creato = models.DateTimeField(auto_now_add=True, verbose_name="data creazione")
-    prezzo = models.IntegerField(default='0')
     quantita = models.IntegerField(blank=True, default="1", verbose_name="quantità")
+    prezzo = models.IntegerField(default='0')
+    iva = models.IntegerField(default='22')
+    ultima_modifica = models.DateField(auto_now_add=True, verbose_name="Ultima modifica")
 
     def __str__(self):
         return self.codiceProdotto
@@ -86,15 +101,10 @@ class Dispositivo(models.Model):
         verbose_name = "Merce"
         verbose_name_plural = "Merci"
 
-class Installazioni(models.Model):
-    dispVenduti = models.OneToOneField(Dispositivo, on_delete=models.CASCADE, verbose_name='Dispositivo')
-    installato = models.BooleanField(default=True)
-    doc = models.FileField(blank=True, null=True, upload_to="installazioni/%Y/%m/%d")
-    data = models.DateField(blank=True, null=True, verbose_name='Data installazione')
-    creato = models.DateTimeField(auto_now_add=True, verbose_name="data creazione")
 
 #Vendite
 class Fattura(models.Model):
+    codiceID = models.CharField(max_length=100, verbose_name="Codice")
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE,  related_name='fattura_cliente',)
     dispositivo = models.ManyToManyField(Dispositivo,
                                         related_name='fattura_disp',
@@ -102,8 +112,9 @@ class Fattura(models.Model):
                                         limit_choices_to={'quantita__gte' : 1},
                                         verbose_name = "Merce"
                                     )
-    fattura = models.FileField(blank=True, upload_to="fatture_vendita/%Y/%m/%d")
     DDT = models.FileField(upload_to="DDT_vendita/%Y/%m/%d")
+    fattura = models.FileField(blank=True, upload_to="fatture_vendita/%Y/%m/%d")
+    RIT = models.FileField(upload_to="RIT_vendita/%Y/%m/%d")
     creato = models.DateField(verbose_name="data vendita")
 
     def merce(self):

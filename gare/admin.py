@@ -4,6 +4,8 @@ from .models import GaraPubblica, AltriFile
 #
 class FileModelAdmin(admin.StackedInline):
     model = AltriFile
+    extra = 0
+
 
 @admin.register(GaraPubblica)
 class GaraPubblicaModelAdmin(admin.ModelAdmin):
