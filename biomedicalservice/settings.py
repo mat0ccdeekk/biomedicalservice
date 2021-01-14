@@ -185,7 +185,8 @@ JET_SIDE_MENU_ITEMS = [  # A list of application or custom item dicts
         {'name': 'Clienti', 'label': ('Cliente'), 'url': '/admin/main/cliente/',},
         {'name': 'Fornitori', 'label': ('Fornitore'), 'url': '/admin/main/fornitore/',},
     ]},
-        {'label': ('Gestione'), 'app_label': 'main', 'items': [
+
+    {'label': ('Gestione'), 'app_label': 'main', 'items': [
         {'name': 'Acquisti', 'label': ('Acquisti'), 'url': '/admin/main/acquisti/',},
         {'name': 'Dispositivo', 'label': ('Magazzino'), 'url': '/admin/main/dispositivo/',},
         {'name': 'Fattura', 'label': ('Vendite'), 'url': '/admin/main/fattura/',},
@@ -199,11 +200,15 @@ JET_SIDE_MENU_ITEMS = [  # A list of application or custom item dicts
         {'name': 'Prodotti', 'label': ('Dispositivi'), 'url': '/admin/assistenza/prodotti/',},
 
     ]},
-
+    
     {'label': ('Bandi pubblici'), 'app_label': 'gare', 'items': [
         {'name': 'GaraPubblica', 'label': ('Gare'), 'url': '/admin/gare/garapubblica/',},
         { 'label': ('MEPA'), 'url': 'https://www.mepa.it/',},
 
+    ]},
+
+    {'label': ('Spedizioni'), 'items': [
+        {'label': ('DHL'), 'url': 'https://mydhl.express.dhl/it/it/home.html#/',},
     ]},
 
 ]
