@@ -1,5 +1,5 @@
 from django.db import models
-import uuid
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -52,13 +52,33 @@ class Fornitore(models.Model):
 
 
 class Acquisti(models.Model):
-    codiceID = models.CharField(max_length=100, verbose_name="Codice")
+    stato_acquisti =(
+            ('ordinato', 'Ordinato'),
+            ('spedito','Spedito'),
+            ('ricevuto','Ricevuto'),
+            ('pagato','Pagato'),
+            ('chiuso','Chiuso'),
+        )
+
     fornitore= models.ForeignKey(Fornitore, on_delete=models.CASCADE)
-    DDT = models.FileField(upload_to="DDT_Acquisti/%Y/%m/%d")
-    fattura = models.FileField(upload_to="Fattura_Acquisti/%Y/%m/%d")
-    # prezzo = models.IntegerField(default='0')
-    creato = models.DateField(verbose_name="Data acquisto")
-    pagamento = models.BooleanField(default=False, verbose_name="Pagato")
+    stato = models.CharField(choices=stato_acquisti, max_length=20, blank=True, null=True)
+    track = models.CharField(max_length=100, blank=True, null=True, verbose_name='Tracking')
+    preventivo = models.FileField(upload_to="Fattura_Acquisti/%Y/%m/%d")
+    DDT = models.FileField(upload_to="DDT_Acquisti/%Y/%m/%d", blank=True)
+    fattura = models.FileField(blank=True, upload_to="fatture_Acquisti/%Y/%m/%d")
+    prezzo = models.IntegerField(default='0', blank=True, null=True, verbose_name='importo')
+    creato = models.DateTimeField(verbose_name="Data")
+
+    ordinato = models.DateTimeField(verbose_name="Ordinato", blank=True, null=True)
+    spedito = models.DateTimeField(verbose_name="Spedito", blank=True, null=True)
+    ricevuto = models.DateTimeField(verbose_name="ricevuto", blank=True, null=True)
+    pagato = models.DateTimeField(verbose_name="pagato", blank=True, null=True)
+    chiuso = models.DateTimeField(verbose_name="chiuso", blank=True, null=True)
+
+
+    codiceID = models.CharField(max_length=100, verbose_name="ID")
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, verbose_name="User")
+
 
     def __str__(self):
         return str(self.id)
@@ -116,6 +136,7 @@ class Fattura(models.Model):
     fattura = models.FileField(blank=True, upload_to="fatture_vendita/%Y/%m/%d")
     RIT = models.FileField(upload_to="RIT_vendita/%Y/%m/%d")
     creato = models.DateField(verbose_name="data vendita")
+    autore = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
 
     def merce(self):
         return "\n, ".join([p.codiceProdotto for p in self.dispositivo.all()])
