@@ -16,6 +16,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'biomedicalservice.settings')
 
 application = get_wsgi_application()
 
-if os.getcwd() == '/app':
-    from whitenoise.django import DjangoWhiteNoise
-    application = DjangoWhiteNoise(application)
+# if os.getcwd() == '/app':
+#     from whitenoise.django import DjangoWhiteNoise
+#     application = DjangoWhiteNoise(application)

@@ -25,7 +25,7 @@ SECRET_KEY = '6vc%#!x-2s(a+i#w%vn+2am0_ug8=+sq8%k%-j8v*%oe(@v01$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'localhost', 'https://biomedicalservice.herokuapp.com/']
 
 
 # Application definition
@@ -52,7 +52,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  #django whitenoise
+    #django whitenoise
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -212,17 +213,17 @@ JET_SIDE_MENU_ITEMS = [  # A list of application or custom item dicts
 
 ]
 
-if os.getcwd() == '/app':
-    import dj_database_url
-    db_from_env = dj_database_url.config(conn_max_age=500)
-    DATABASES['default'].update(db_from_env)
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-    ALLOWED_HOSTS = ['https://biomedicalservice.herokuapp.com/']
-    DEBUG = True
-
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'static')
-    ]
+# if os.getcwd() == '/app':
+#     import dj_database_url
+#     db_from_env = dj_database_url.config(conn_max_age=500)
+#     DATABASES['default'].update(db_from_env)
+#     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#
+#     ALLOWED_HOSTS = ['https://biomedicalservice.herokuapp.com/']
+#     DEBUG = True
+#
+#     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#
+#     STATICFILES_DIRS = [
+#         os.path.join(BASE_DIR, 'static')
+#     ]
