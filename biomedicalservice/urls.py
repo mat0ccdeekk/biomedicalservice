@@ -23,14 +23,14 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),  # Django JET URLS
     path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # Django JET dashboard URLS
-
-    path('admin/', admin.site.urls),
-    path('', homepage, name='homepage'),
+    # path('', include('main.urls')),
+    path('', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('clienti/', include('main.urls'))
-
+    # path('', homepage, name='visualizzaCliente'),
 
 ]
+
+
 
 
 if settings.DEBUG:

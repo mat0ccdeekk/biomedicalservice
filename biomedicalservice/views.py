@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect
 
 def homepage(request):
-    return render(request, 'base.html')
+    return HttpResponseRedirect('/admin/')

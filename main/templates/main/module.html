@@ -1,0 +1,18 @@
+
+<ul>
+    {% for c in clienti %}
+        <li>
+            <span class="float-right">
+                <span class="dim">
+                    {{ c.denominazione }} <span class="icon-clock tooltip" title="{{ ticket.date_add }}"></span>
+                </span>
+            </span>
+
+
+        </li>
+    {% empty %}
+        <li>
+            Nothing to show
+        </li>
+    {% endfor %}
+</ul>

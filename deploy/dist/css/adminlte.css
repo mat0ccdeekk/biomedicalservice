@@ -21842,7 +21842,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 
 .login-card-body,
 .register-card-body {
-  background-color: #fff;
+  background-color: black;
   border-top: 0;
   color: #666;
   padding: 20px;

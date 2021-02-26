@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,7 +26,7 @@ SECRET_KEY = '6vc%#!x-2s(a+i#w%vn+2am0_ug8=+sq8%k%-j8v*%oe(@v01$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', 'localhost', 'https://biomedicalservice.herokuapp.com/']
+ALLOWED_HOSTS = ['*', 'localhost']
 
 
 # Application definition
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
 
     'main',
     'assistenza',
+    'azienda',
     'crispy_forms',
     'gare',
     'import_export',
@@ -52,8 +54,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    #django whitenoise
-    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -122,9 +122,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
+#CUSTOMER USER
+AUTH_USER_MODEL = "azienda.CustomUser"
+
 LANGUAGE_CODE = 'it'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Paris'
 
 USE_I18N = True
 
@@ -132,48 +135,22 @@ USE_L10N = True
 
 USE_TZ = True
 
-# SUIT_CONFIG = {
-#     'ADMIN_NAME': 'Biomedical Service',
-#
-#
-#     'HEADER_DATE_FORMAT': 'l, j. F Y',
-#     'HEADER_TIME_FORMAT': 'H:i',
-#
-#     # forms
-#     'SHOW_REQUIRED_ASTERISK' : True,  # Default True
-#     'CONFIRM_UNSAVED_CHANGES': True, # Default True
-#
-#     # menu
-#     'SEARCH_URL': '/admin/auth/user/',
-#     'MENU_ICONS': {
-#        'sites': 'icon-leaf',
-#        'auth': 'icon-lock',
-#     },
-#     'MENU_OPEN_FIRST_CHILD': True, # Default True
-#     'MENU_EXCLUDE': ('auth.group',),
-#
-#
-#     # misc
-#     'LIST_PER_PAGE': 15
-# }
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 LOGIN_REDIRECT_URL = "/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media-serve')
+# MEDIA_ROOT = '/home/django/biomedicalservice/media-serve/'
 MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'deploy')
+
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
-JET_DEFAULT_THEME = 'default'
+JET_DEFAULT_THEME = 'green'
 
 JET_SIDE_MENU_COMPACT = True
 
@@ -181,49 +158,46 @@ JET_CHANGE_FORM_SIBLING_LINKS = True
 
 JET_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
 
+
+
+
 JET_SIDE_MENU_ITEMS = [  # A list of application or custom item dicts
+    # {'label': ('Users'), 'items': [
+    #     {'name': 'auth.group'},
+    #
+    # ]},
+
     {'label': ('Rubrica'), 'app_label': 'main','items': [
-        {'name': 'Clienti', 'label': ('Cliente'), 'url': '/admin/main/cliente/',},
-        {'name': 'Fornitori', 'label': ('Fornitore'), 'url': '/admin/main/fornitore/',},
+        {'name': 'Clienti', 'label': ('Clienti'), 'url': '/main/cliente/',},
+        {'name': 'Fornitori', 'label': ('Fornitori'), 'url': '/main/fornitore/',},
     ]},
 
-    {'label': ('Gestione'), 'app_label': 'main', 'items': [
-        {'name': 'Acquisti', 'label': ('Acquisti'), 'url': '/admin/main/acquisti/',},
+    {'label': ('Commerciale'), 'app_label': 'main', 'items': [
+        {'name': 'Acquisti', 'label': ('Acquisti'), 'url': '/main/acquisti/',},
         # {'name': 'Dispositivo', 'label': ('Magazzino'), 'url': '/admin/main/dispositivo/',},
-        {'name': 'Fattura', 'label': ('Vendite'), 'url': '/admin/main/fattura/',},
+        {'name': 'Fattura', 'label': ('Vendite'), 'url': '/main/fattura/',},
 
     ]},
 
     {'label': ('Assistenza'), 'app_label': 'assistenza', 'items': [
-        {'name': 'Verifiche', 'label': ('Verifica'), 'url': '/admin/assistenza/verifica/',},
-        {'name': 'Riparazioni', 'label': ('Riparazione'), 'url': '/admin/assistenza/riparazione/',},
-        {'name': 'Prodotti', 'label': ('Dispositivi'), 'url': '/admin/assistenza/prodotti/',},
+        {'name': 'Prodotti', 'label': ('Strumenti'), 'url': '/assistenza/prodotti/',},
+        {'name': 'Rapporti', 'label': ('Rapporti'), 'url': '/main/rapporti/',},
+        {'name': 'Verifiche', 'label': ('Verifiche'), 'url': '/assistenza/verifica/',},
+        {'name': 'Riparazioni', 'label': ('Riparazioni'), 'url': '/assistenza/riparazione/',},
 
     ]},
 
     {'label': ('Bandi pubblici'), 'app_label': 'gare', 'items': [
-        {'name': 'GaraPubblica', 'label': ('Gare'), 'url': '/admin/gare/garapubblica/',},
-        { 'label': ('MEPA'), 'url': 'https://www.mepa.it/',},
+        {'name': 'GaraPubblica', 'label': ('Gare'), 'url': '/gare/garapubblica/',},
+        { 'label': ('MEPA'), 'url': 'https://www.acquistinretepa.it/opencms/opencms/cruscotto/index.html#!/',},
 
     ]},
 
+
     {'label': ('Spedizioni'), 'items': [
-        {'label': ('DHL'), 'url': 'https://mydhl.express.dhl/it/it/home.html#/',},
+        {'label': ('DHL'), 'url': 'https://mydhl.express.dhl/it/it/manage-shipments.html',},
+        {'label': ('SUSA'), 'url': 'https://flex.susa.it/Home',},
+
     ]},
 
 ]
-
-# if os.getcwd() == '/app':
-#     import dj_database_url
-#     db_from_env = dj_database_url.config(conn_max_age=500)
-#     DATABASES['default'].update(db_from_env)
-#     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-#
-#     ALLOWED_HOSTS = ['https://biomedicalservice.herokuapp.com/']
-#     DEBUG = True
-#
-#     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-#
-#     STATICFILES_DIRS = [
-#         os.path.join(BASE_DIR, 'static')
-#     ]
